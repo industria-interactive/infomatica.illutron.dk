@@ -1,0 +1,9 @@
+# idea files
+/.idea/*
+!/.idea/copyright/
+!/.idea/dictionaries/
+!/.idea/codeStyles/
+/*.iml
+
+# mac
+.DS_Store
