@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Informatica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script>
+// -- https://xemantic.github.io/shader-web-background/
+const shaderWebBackground={};(()=>{'use strict';const r=(a,b)=>{b.initHalfFloatRGBATexture(b.width,b.height);a.texParameteri(a.TEXTURE_2D,
+a.TEXTURE_MIN_FILTER,a.LINEAR);a.texParameteri(a.TEXTURE_2D,a.TEXTURE_MAG_FILTER,
+a.LINEAR);a.texParameteri(a.TEXTURE_2D,a.TEXTURE_WRAP_S,a.CLAMP_TO_EDGE);a.texParameteri(a.TEXTURE_2D,
+a.TEXTURE_WRAP_T,a.CLAMP_TO_EDGE)},x=(a,b)=>{console.warn("shader-web-background cannot shade, adding fallback CSS classes");
+document.documentElement.classList.add("shader-web-background-fallback");b.classList.add("shader-web-background-fallback");
+if(a instanceof shaderWebBackground.GlError)console.warn("Not sufficient WebGL support:",
+a);else throw a;};
+function y(a,b){if(!a)throw new shaderWebBackground.ConfigError(b);}
+function z(a){y(a instanceof HTMLCanvasElement,"config.canvas must be instance of canvas");
+return a}
+function A(){const a=document.createElement("canvas"),b=a.style;a.id="shader-web-background";b.width=
+"100vw";b.height="100vh";b.position="fixed";b.top="0";b.left="0";b.zIndex=-9999;return a}
+const B=a=>'<script type="x-shader/x-fragment" id="'+a+'">';
+function D(a){const b=document.getElementById(a);y(b,"Missing shader source: "+B(a));
+y(b instanceof HTMLScriptElement&&"x-shader/x-fragment"===b.type,'Shader source element of id "'+
+a+'" should be of type: '+B(a));return b.text}
+function E(a,b){"loading"!==document.readyState?b():window.addEventListener(a,b)}
+class F{constructor(a,b,c,d){this.g=c;const k=a.gl;this.h=()=>{for(const f of d)f.u(k,
+f.location,b)};this.i=()=>{var f=c.v,h=a.gl;h.bindBuffer(h.ARRAY_BUFFER,a.j);h.enableVertexAttribArray(f);
+h.vertexAttribPointer(f,2,h.FLOAT,!1,0,0);h.drawArrays(h.TRIANGLE_STRIP,0,4);h.disableVertexAttribArray(f);
+h.bindBuffer(h.ARRAY_BUFFER,null);f=a.gl;for(h=0;h<a.g;h++)f.activeTexture(f.TEXTURE0+
+h),f.bindTexture(f.TEXTURE_2D,null);a.g=0}}}
+function G(a){var b={antialias:!1,depth:!1,alpha:!1};try{return new H(a,b)}catch(c){throw new shaderWebBackground.GlError(c.message);
+}}
+function I(a,b,c,d,k,f){function h(e,m){try{{var n=q;const p=n.gl,v=J(n,e,p.VERTEX_SHADER,"attribute vec2 V;void main(){gl_Position=vec4(V,0,1);}"),
+O=J(n,e,p.FRAGMENT_SHADER,m),u=p.createProgram();p.attachShader(u,v);p.attachShader(u,
+O);p.linkProgram(u);var l=u}return l}catch(p){throw new shaderWebBackground.ConfigError(p.message);
+}}const q=G(a),w=[],g={gl:q.gl,canvas:a,width:0,height:0,cssPixelRatio:0,cssWidth:0,
+cssHeight:0,isOverShader:(e,m)=>{const n=a.getBoundingClientRect();return e>=n.left&&
+e<=n.right&&m>=n.top&&m<=n.bottom},toShaderX:e=>(e-a.getBoundingClientRect().left)*
+g.cssPixelRatio+.5,toShaderY:e=>a.height-(e-a.getBoundingClientRect().top)*g.cssPixelRatio-
+.5,s:()=>g.cssWidth!==a.clientWidth||g.cssHeight!==a.clientHeight?(g.resize(),!0):
+!1,resize:()=>{const e=window.devicePixelRatio||1,m=a.clientWidth,n=a.clientHeight,
+l=Math.floor(m*e),p=Math.floor(n*e);a.width=l;a.height=p;g.width=l;g.height=p;g.cssPixelRatio=
+e;g.cssWidth=m;g.cssHeight=n;q.gl.viewport(0,0,q.canvas.width,q.canvas.height);for(const v of w)v.g.l(l,
+p)},texture:(e,m)=>{{var n=q;const l=n.gl;m=m instanceof K?m.g:m;l.activeTexture(l.TEXTURE0+
+n.g);l.bindTexture(l.TEXTURE_2D,m);l.uniform1i(e,n.g++)}},buffers:{},initHalfFloatRGBATexture:(e,
+m)=>{q.h.g(e,m)}},P=Object.keys(b).length-1;let Q=0;for(const e in b){if(Q++<P){const l=
+b[e].texture||r;g.buffers[e]=L(q,()=>{l(q.gl,g)})}const m=M(q,h(e,D(e)),g.buffers[e]),
+n=b[e].uniforms||{};var t=Object.keys(n);for(const l of m.m)y(n[l.name],'No configuration for uniform "'+
+l.name+'" defined in shader "'+e+'"'),t=t.filter(p=>p!==l.name);0!==t.length&&console.warn('Extra uniforms configured for shader "'+
+e+'", which are not present in the shader code - might have been removed by GLSL compiler if not used: '+
+t.join(", "));t=m.m.map(l=>({location:l.location,u:n[l.name]}));w.push(new F(q,g,
+m,t))}const C=()=>{g.s()&&d&&d(g.width,g.height,g);k&&k(g);for(const e of w)e.g.i(e.h,
+e.i);f&&f(g);requestAnimationFrame(C)};E("load",()=>{g.resize();c&&c(g);d&&d(g.width,
+g.height,g);requestAnimationFrame(C)});return g}
+shaderWebBackground.Error=class extends Error{constructor(a){super(a);this.name="shaderWebBackground.Error"}};
+shaderWebBackground.ConfigError=class extends shaderWebBackground.Error{constructor(a){super(a);
+this.name="shaderWebBackground.ConfigError"}};
+shaderWebBackground.GlError=class extends shaderWebBackground.Error{constructor(a){super(a);this.name=
+"shaderWebBackground.GlError"}};
+shaderWebBackground.shade=function(a){y(a,"Missing config argument");const b=a.canvas?
+z(a.canvas):A();y(a.shaders,"No shaders specified in config");try{const c=I(b,a.shaders,
+a.onInit,a.onResize,a.onBeforeFrame,a.onAfterFrame);a.canvas||E("DOMContentLoaded",
+()=>{document.body.appendChild(b)});return c}catch(c){(a.onError||x)(c,b)}};const N=[-1,1,1,1,-1,-1,1,-1];
+function R(a,b){return a.j(a.gl.getExtension(b),b+" extension is not supported")}
+class S{constructor(a,b){this.gl=a;this.j=b}g(){}}
+class T extends S{constructor(a,b){super(a,b);this.h=R(this,"OES_texture_half_float");
+R(this,"OES_texture_half_float_linear")}g(a,b){const c=this.gl;c.texImage2D(c.TEXTURE_2D,
+0,c.RGBA,a,b,0,c.RGBA,this.h.HALF_FLOAT_OES,null)}}
+class U extends S{constructor(a,b){super(a,b);R(this,"EXT_color_buffer_float");this.gl.getExtension("OES_texture_float_linear")}g(a,
+b){const c=this.gl;c.texImage2D(c.TEXTURE_2D,0,c.RGBA16F,a,b,0,c.RGBA,c.HALF_FLOAT,
+null)}}
+function V(a){a=a.split(/\r?\n/);const b=a.length.toString().length;var c=[];a.forEach((d,
+k)=>{k=(k+1).toString();k=k.length>=b?k:" ".repeat(b-k.length)+k;c.push(k+": "+d+
+"\n")});return c.join("")}function L(a,b){return new K(a.gl,()=>{b(a.gl)})}
+function M(a,b,c){const d=a.gl;a=[];const k=d.getProgramParameter(b,d.ACTIVE_UNIFORMS);
+for(let f=0;f<k;f++){const h=d.getActiveUniform(b,f);a.push({name:h.name,location:d.getUniformLocation(b,
+h.name)})}return{v:d.getAttribLocation(b,"V"),m:a,l:c?(f,h)=>c.l(f,h):()=>{},i:(f,
+h)=>{d.useProgram(b);f();c?(f=c.g,c.g=c.h,c.h=f,c.i(h)):h()}}}
+function J(a,b,c,d){a=a.gl;c=a.createShader(c);a.shaderSource(c,d);a.compileShader(c);
+if(!a.getShaderParameter(c,a.COMPILE_STATUS)){const k=String(a.getShaderInfoLog(c));
+a.deleteShader(c);b="Cannot compile shader - "+b+": "+k;console.log(b);console.log(V(d));
+throw Error(b);}return c}
+class H{constructor(a,b){this.canvas=a;const c=(k,f)=>{if(!k)throw Error(f);return k};
+let d=a.getContext("webgl2",b);if(d)this.h=new U(d,c);else if(d=a.getContext("webgl",
+b))this.h=new T(d,c);c(d,"webgl context not supported on supplied canvas element: "+
+a);this.gl=d;a=d.createBuffer();d.bindBuffer(d.ARRAY_BUFFER,a);d.bufferData(d.ARRAY_BUFFER,
+new Float32Array(N),d.STATIC_DRAW);d.bindBuffer(d.ARRAY_BUFFER,null);this.j=a;this.buffers=
+{};this.g=0}}
+function W(a){const b=a.gl,c=b.createTexture();b.bindTexture(b.TEXTURE_2D,c);a.o(b);
+b.bindTexture(b.TEXTURE_2D,null);return c}
+class K{constructor(a,b){this.j=a.createFramebuffer();this.gl=a;this.o=b;this.g=this.h=
+null}l(){this.h&&this.gl.deleteTexture(this.h);this.g&&this.gl.deleteTexture(this.g);
+this.h=W(this);this.g=W(this)}i(a){const b=this.gl;b.bindFramebuffer(b.FRAMEBUFFER,
+this.j);b.framebufferTexture2D(b.FRAMEBUFFER,b.COLOR_ATTACHMENT0,b.TEXTURE_2D,this.g,
+0);a();b.framebufferTexture2D(b.FRAMEBUFFER,b.COLOR_ATTACHMENT0,b.TEXTURE_2D,null,
+0);b.bindFramebuffer(b.FRAMEBUFFER,null)}};})()
+//# sourceMappingURL=../dist/shader-web-background.min.js.map
+  </script>
+  <script type="x-shader/x-fragment" id="image">
+    precision highp float;
+
+    #define SCALE 40.0
+    #define ROTATION_SPEED -1.0
+    #define INTENSITY_PULSE_SPEED 1.3
+
+    uniform vec2 iResolution;
+    uniform float iTime;
+
+    float getColorComponent(float dist, float angle, float scaleIncrement) {
+      return
+        sin(
+          (dist * SCALE)
+            + angle
+            + (cos(dist * SCALE))
+            - (iTime * ROTATION_SPEED)
+        )
+          - dist * (2.3 + sin(iTime * INTENSITY_PULSE_SPEED))
+          + 0.3;
+    }
+
+    void main() {
+      vec2 uv = (gl_FragCoord.xy -.5 * iResolution.xy) / iResolution.y;
+      float dist = length(uv),
+      angle = atan(uv.x, uv.y);
+      vec3 color = vec3(
+        getColorComponent(dist, angle, 0.0),
+        getColorComponent(dist * 0.99, angle - 0.05, 1.0),
+        getColorComponent(dist * 0.98, angle - 0.1, 2.0)
+      );
+      gl_FragColor = vec4(color * .7, 1.0);
+    }
+  </script>
+  <script>
+    shaderWebBackground.shade({
+      shaders: {
+        image: {
+          uniforms: {
+            iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height),
+            iTime:       (gl, loc) => gl.uniform1f(loc, performance.now() / 1000)
+          }
+        }
+      }
+    });
+  </script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      background: black;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo {
+      color: white;
+      fill: white;
+      width: 90vw;
+      opacity: .8;
+      fill: white;
+    }
+    .logo path {
+    }
+  </style>
+</head>
+<body>
+<svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200.15 28.69" aria-labelledby="logoTitle logoDesc" role="img">
+    <title id="logoTitle">Informatica</title>
+    <desc id="logoDesc">full screen vector logo of the Informatica project</desc>
+    <g>
+      <path d="M9.77 0c-.5 0-.87.15-1.09.44-.26.32-.4.65-.45 1v25.61c0 .4.11.72.34 1 .23.27.52.4.86.4.4 0 .75-.13 1.02-.4.28-.28.42-.6.42-1V4.61c0-.5.04-.9.13-1.22.09-.33.27-.53.55-.62a.63.63 0 01.2-.03c.2 0 .42.07.65.23.2.14.42.37.65.68l10.72 13.36a4.84 4.84 0 01.96 2.25c.03.2.04.5.04.9v7.02c0 .37.13.68.4.93.26.27.56.4.92.4.37 0 .7-.13 1-.4.27-.25.4-.56.4-.93V1.74c0-.43-.12-.8-.37-1.09a1.2 1.2 0 00-.95-.44c-.4 0-.71.15-.96.44-.27.32-.41.68-.41 1.1V11.53c0 .3-.02.53-.07.68a.53.53 0 01-.37.31.7.7 0 01-.21.04c-.2 0-.4-.08-.58-.24-.03-.02-.2-.25-.55-.68L14.14.82a1.87 1.87 0 00-.71-.69 2.9 2.9 0 00-.96-.13zM49.5 0c-.62 0-1.1.02-1.47.07-.36.07-.65.2-.85.4-.34.42-.51.85-.51 1.3v24.5c0 .4.03.75.1 1.02.04.28.17.51.37.72.19.2.38.33.59.38.18.06.46.1.85.1h.61l13.6-.04c.4 0 .75-.03 1.02-.1.27-.04.51-.17.72-.37.32-.35.48-.83.48-1.44V1.71c0-.62-.18-1.07-.55-1.37a1.26 1.26 0 00-.62-.27 5.11 5.11 0 00-.88-.07zm19.95 0c-.25 0-.5.02-.72.07-.23.04-.4.12-.54.24-.41.27-.62.7-.62 1.3v25.3c0 .33.05.58.14.76.18.32.43.52.75.62.32.1.7.16 1.16.16h2.22c.6 0 1.06-.2 1.4-.61l.24-.35c.02-.06.04-.3.04-.68v-9.42c0-.7.19-1.25.57-1.61.23-.2.46-.33.69-.38.2-.02.54-.03 1.02-.03h3.42c.66 0 1.14.23 1.44.68.17.27.29.5.34.65.02.19.03.48.03.89v8.78c0 .36.03.7.1.99.05.32.14.53.28.65.38.27.79.4 1.22.4h2.84c.34 0 .6-.02.75-.1.16-.04.33-.13.52-.27.15-.14.25-.28.3-.44.03-.16.04-.45.04-.86V14.38c0-.28-.03-.52-.08-.72-.04-.2-.13-.38-.27-.54-.14-.16-.54-.35-1.23-.55-.7-.18-1.14-.42-1.3-.72-.15-.27-.24-.5-.27-.68a3.87 3.87 0 01-.06-.85V1.6c0-.62-.13-1.04-.38-1.27A1.6 1.6 0 0082.7 0h-.75zM31.49.07c-.1 0-.29.02-.59.07s-.52.13-.67.27c-.4.3-.58.75-.58 1.37v9.53c0 .02 0 .17.03.44.02.27.11.52.27.75.14.23.56.44 1.26.65.69.23 1.13.54 1.34.93.14.22.22.46.24.71v12.5c0 .36.15.67.44.92a1.31 1.31 0 001.91 0c.28-.27.42-.6.42-.98v-9.68c0-.6.19-1.1.57-1.5.23-.23.48-.38.75-.47.25-.07.56-.1.93-.1h4.74a2.7 2.7 0 001.4-.35c.37-.22.56-.58.56-1.05 0-.51-.2-.86-.59-1.06-.38-.2-.85-.31-1.4-.31h-4.58c-.84 0-1.47-.25-1.9-.75-.21-.23-.33-.46-.35-.69-.04-.2-.07-.54-.07-1.02V4.89c0-.67.31-1.21.92-1.65.26-.18.5-.3.72-.34.2-.02.52-.03.96-.03h5.05a1.4 1.4 0 001.44-1.4c0-.39-.14-.71-.41-.99a1.38 1.38 0 00-1.03-.41zm87.57 0c-.31 0-.6.03-.88.1s-.52.2-.72.41c-.2.23-.33.46-.37.69-.07.23-.11.53-.11.91v10.7c0 .84-.4 1.43-1.2 1.77-1.07.48-1.62.74-1.67.79a1.97 1.97 0 00-.38 1.23v9.97c0 .75.18 1.26.52 1.54.25.2.66.3 1.23.3.16-.02.33-.03.52-.03h1.19c.8 0 1.37-.09 1.74-.27.5-.25.75-.75.75-1.5v-9.5c0-.27.1-.56.28-.85a1.78 1.78 0 011.36-.96l.68-.03h5.54c.72 0 1.26.17 1.6.51.25.25.43.51.51.79.07.3.1.64.1 1.06v9.18c0 .34.12.68.35 1.02.2.35.57.52 1.09.52.52 0 .9-.2 1.12-.62.14-.25.21-.54.21-.88V1.78c0-.53-.16-.95-.47-1.27-.32-.25-.64-.4-.96-.44h-1.03zm67.63 0c-.31 0-.6.03-.88.1a1.46 1.46 0 00-1.1 1.1c-.07.23-.1.53-.1.91v10.7c0 .84-.4 1.43-1.2 1.77a21.2 21.2 0 00-1.67.79c-.13.18-.23.35-.28.51-.06.16-.1.4-.1.72v9.97c0 .75.18 1.26.52 1.54.25.2.66.3 1.23.3.16-.02.33-.03.51-.03h1.2c.8 0 1.37-.09 1.74-.27.5-.25.75-.75.75-1.5v-9.5c0-.27.1-.56.28-.85a1.78 1.78 0 011.35-.96l.69-.03h5.54c.72 0 1.26.17 1.6.51.25.25.42.51.51.79.07.3.1.64.1 1.06v9.18c0 .34.12.68.35 1.02.2.35.57.52 1.09.52.52 0 .9-.2 1.12-.62.14-.25.21-.54.21-.88V1.78c0-.53-.16-.95-.47-1.27-.33-.25-.65-.4-.96-.44h-1.03zM165.6.1c-.25 0-.54.04-.85.1-.35.07-.59.15-.72.24-.55.37-.83.95-.83 1.74v24.19c0 .36.04.66.11.89.05.25.17.5.38.75.18.25.55.4 1.12.48h.95l11.49-.04c.66 0 1.18-.2 1.56-.58.25-.25.4-.45.45-.61.02-.16.03-.48.03-.96v-5.23c0-.5-.1-.93-.3-1.29a1.12 1.12 0 00-1-.52c-.57 0-.94.16-1.12.49-.2.34-.3.8-.3 1.39v2.46c0 .68-.23 1.24-.7 1.68-.26.25-.51.4-.74.44-.25.07-.62.1-1.1.1h-5.77c-.78 0-1.37-.22-1.78-.68-.25-.27-.37-.59-.37-.96-.03-.36-.04-.68-.04-.96V4.95c0-.73.28-1.28.83-1.67.36-.25.81-.38 1.36-.38h2.97c.67 0 1.17.14 1.5.41.28.2.46.41.56.62.06.2.1.43.1.68v2.84c0 .3.05.55.16.78.1.25.25.46.45.62.2.18.4.3.58.34.1.02.33.03.72.03h2.32c.11 0 .3-.02.58-.06.28-.05.51-.16.71-.35.21-.18.34-.4.38-.65.03-.22.04-.58.04-1.06V1.88c0-.34-.01-.62-.04-.82a1.62 1.62 0 00-.3-.58c-.16-.18-.34-.3-.55-.35-.23-.02-.54-.03-.93-.03zM90.27.18c-.4 0-.74.15-1 .47a1 1 0 00-.16.5l-.03.56v25.07c0 .5.1.93.3 1.3.21.39.52.58.92.58.46 0 .8-.2 1.03-.58.23-.37.34-.78.34-1.24V4.44c0-.34.05-.63.14-.85.07-.21.23-.35.48-.41h.13c.14 0 .28.05.4.16.17.17.3.36.38.59l3.77 8.16c.25.6.66.9 1.23.9.25 0 .47-.1.68-.28.18-.16.35-.4.51-.69L104 4.17c.1-.2.24-.4.45-.58.16-.14.3-.2.44-.2h.07c.23.06.36.21.41.44v23.43c0 .48.07.8.2.98.14.21.3.32.49.35.15.05.42.07.81.07l2.66.03c.37 0 .64-.02.83-.07.18-.02.36-.11.54-.27.32-.25.48-.67.48-1.26V1.88c0-.36-.02-.65-.07-.85-.07-.21-.2-.38-.38-.52-.3-.2-.66-.3-1.09-.3h-5.53c-.43 0-.78.1-1.06.3l-.37.34a2.2 2.2 0 00-.38.48l-3.38 5.84c-.11.2-.23.35-.34.44a.66.66 0 01-.45.18c-.39 0-.65-.23-.78-.69l-2.57-5.77c-.15-.32-.36-.6-.6-.82A1.8 1.8 0 0093.2.18zm45.6.03a2 2 0 00-1.23.37c-.37.28-.55.63-.55 1.06 0 .4.17.73.52.95.34.25.73.38 1.19.38h2.84c.36 0 .68.03.95.1.28.1.5.23.69.42.32.33.47.84.47 1.5v21.93c0 .23.03.45.07.68.02.23.13.44.3.64.17.21.34.32.53.35.15.05.42.07.81.07h2.56c.44 0 .78-.06 1.03-.17.23-.12.4-.31.5-.59.1-.25.15-.57.15-.95V4.71c0-.59.17-1.03.5-1.32.24-.19.43-.3.6-.35.08-.02.3-.04.64-.04h3.1c.4 0 .74-.15 1.03-.44.3-.3.45-.64.45-1.03 0-.38-.16-.7-.48-.95a1.71 1.71 0 00-1.1-.37zM4.67.34c-.38 0-.7.15-.94.44-.25.3-.38.64-.38 1.03v11.24c0 .84-.24 1.42-.72 1.74-.2.14-.73.33-1.57.58-.3.1-.52.23-.68.4-.19.2-.3.39-.35.6a4 4 0 00-.03.67V27.1c0 .22.01.42.03.58.03.15.1.3.21.4.2.26.6.38 1.16.38h3.31c.43 0 .74-.07.93-.2a.73.73 0 00.3-.45c.05-.18.07-.4.07-.65V1.81c0-.39-.12-.73-.37-1.03a1.2 1.2 0 00-.96-.44zm154.97 0c-.38 0-.7.15-.95.44-.25.3-.37.64-.37 1.03v11.24c0 .84-.24 1.42-.72 1.74-.2.14-.73.33-1.58.58-.3.1-.52.23-.68.4-.18.2-.3.39-.34.6-.03.08-.04.3-.04.67V27.1c0 .22.01.42.04.58.02.15.09.3.2.4.21.26.6.38 1.16.38H159.68c.43 0 .74-.07.92-.2a.73.73 0 00.3-.45c.05-.18.08-.4.08-.65V1.81c0-.39-.13-.73-.38-1.03a1.2 1.2 0 00-.96-.44zm-38.7 2.12h7.45c.5 0 .85.11 1.06.34.2.23.33.45.37.65.02.23.03.55.03.95v5.67c0 .41 0 .75-.03 1-.04.25-.13.5-.27.75-.16.25-.4.42-.75.51-.36.11-.79.17-1.26.17h-5.74c-.48 0-.85-.03-1.13-.1-.3-.04-.56-.18-.79-.4a.94.94 0 01-.37-.76c-.03-.3-.04-.6-.04-.92V4.3c0-.7.24-1.21.72-1.53.25-.19.5-.29.75-.31zm67.63 0h7.45c.5 0 .85.11 1.06.34.2.23.33.45.37.65.02.23.03.55.03.95v5.67c0 .41 0 .75-.03 1-.04.25-.13.5-.27.75-.16.25-.4.42-.75.51-.36.11-.79.17-1.26.17h-5.74c-.48 0-.85-.03-1.13-.1-.3-.04-.56-.18-.79-.4a.94.94 0 01-.37-.76c-.03-.3-.04-.6-.04-.92V4.3c0-.7.24-1.21.72-1.53.25-.19.5-.29.75-.31zm-116.74.2h7.42c.4 0 .73.1.98.28.32.18.54.4.65.65.1.27.14.62.14 1.05v5.68c0 .7-.17 1.27-.52 1.7a2 2 0 01-.81.58c-.3.1-.7.14-1.24.14h-5.73c-.41 0-.77-.06-1.1-.17-.31-.1-.6-.25-.85-.48-.36-.34-.55-.85-.55-1.53V4.5c0-.64.27-1.14.8-1.5.27-.2.54-.32.81-.34zm-20.05.08h8.37c.7 0 1.25.16 1.64.5.16.16.3.35.41.55.09.21.13.4.13.58V10.72c0 .19 0 .4-.03.62-.04.23-.22.38-.52.44-.3.07-.72.15-1.29.24-.6.12-1 .32-1.23.62-.23.32-.36.57-.38.75-.04.18-.06.4-.06.69v9.32c0 .43-.02.77-.04 1.02-.04.28-.13.53-.27.76-.16.25-.42.44-.79.57-.39.14-.8.2-1.22.2h-4.45c-.36 0-.69-.02-1-.1-.3-.06-.6-.19-.84-.37a2.1 2.1 0 01-.72-.99 4.5 4.5 0 01-.17-1.4V5.05c0-.75.2-1.33.61-1.74.23-.23.5-.39.79-.48.28-.06.63-.1 1.06-.1zM16.33 19.78c-.48 0-.88.16-1.2.48a1.6 1.6 0 00-.3.54c-.1.2-.15.42-.15.65V27c0 .2.03.37.08.56.04.18.12.33.23.47.1.16.23.28.41.35.16.06.46.1.9.1h2.52c.32 0 .59-.04.82-.1.2-.05.4-.16.58-.35.19-.16.31-.35.38-.58.04-.23.06-.51.06-.85v-5.26c0-.46-.17-.84-.5-1.16a1.8 1.8 0 00-.49-.31c-.18-.07-.4-.1-.64-.1zm80.88.2c-.48 0-.9.16-1.24.48a1.87 1.87 0 00-.44 1.2v5.15c0 .37.02.64.07.83.02.17.1.36.24.57.13.23.3.35.48.38.16.05.44.07.85.07h2.5c.23 0 .46-.02.71-.07.25-.03.5-.14.72-.35.2-.17.33-.35.38-.54.02-.18.03-.48.03-.89v-5.29c0-.45-.16-.83-.48-1.13-.32-.27-.7-.41-1.16-.41z"/>
+    </g>
+  </svg>
+</body>
+</html>
